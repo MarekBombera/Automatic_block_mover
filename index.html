@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Automatic Block Mover</title>
+</head>
+
+<body>
+    <script>
+
+
+        let myBlock;
+        let actionListBlock;
+        const actionListArr = [];
+        const actionListBlockArr = [];
+
+
+        // 1. STYLE
+        document.body.style.display = 'flex';
+
+        const myBlockStyle = () => {
+            myBlock.style.display = 'grid';
+            myBlock.style.placeItems = 'center';
+            myBlock.style.width = '200px';
+            myBlock.style.height = '200px';
+            myBlock.style.position = 'absolute';
+            myBlock.style.top = '35%';
+            myBlock.style.left = '35%';
+        }
+
+        const myBlockPositionReset = () => {
+            myBlock.style.top = '35%';
+            myBlock.style.left = '35%';
+        }
+
+
+        const memeImgStyle = () => {
+            meme.setAttribute("src", 'https://833250.smushcdn.com/1694534/wp-content/uploads/2021/06/292dfc52465f28b3c40ecf201c97b091.jpeg?lossy=1&strip=1&webp=1');
+            meme.setAttribute('height', '200px');
+            meme.setAttribute('width', '200px');
+
+        }
+
+        const actionListBlockStyle = () => {
+            actionListBlock.style.display = 'grid';
+            actionListBlock.style.placeItems = 'center';
+            actionListBlock.style.width = '90px';
+            actionListBlock.style.height = '60px';
+            actionListBlock.style.margin = '2px';
+            actionListBlock.style.border = '2px solid black';
+            actionListBlock.style.borderRadius = '5px';
+            actionListBlock.style.backgroundColor = '#f5f5f5'
+
+        }
+
+        const actionBlockMouseOver = (e) => {
+            e.target.style.transition = '0.1s ease-in';
+            e.target.style.backgroundColor = 'yellowgreen';
+            e.target.style.fontSize = '1.2rem';
+        }
+
+        const actionBlockMouseOut = (e) => {
+            e.target.style.backgroundColor = '#f5f5f5';
+            e.target.style.fontSize = '1rem';
+        }
+
+
+        // 2. myBlock
+        const createsMyBlock = () => {
+            myBlock = document.createElement("div");
+            meme = document.createElement("img");
+
+            myBlock.appendChild(meme);
+            document.body.appendChild(myBlock);
+
+            myBlockStyle();
+            memeImgStyle();
+        }
+
+        const releaseMyBlock = (keyPressEvent) => {
+            if (keyPressEvent.code === 'Space') {
+                let interval = setInterval(() => {
+
+                    if (actionListArr.length === 0) {
+                        clearInterval(interval);
+                    }
+
+                    movesMyBlock();
+                    removeActionListBlock();
+                }, 300);
+            }
+        }
+
+        const movesMyBlock = () => {
+            if (actionListArr[0] === 'ArrowLeft') {
+                offsetMyBlockLeft();
+            }
+            if (actionListArr[0] === 'ArrowRight') {
+                offsetMyBlockRight();
+            }
+            if (actionListArr[0] === 'ArrowUp') {
+                offsetMyBlockUp();
+            }
+            if (actionListArr[0] === 'ArrowDown') {
+                offsetMyBlockDown();
+            }
+        }
+
+        const offsetMyBlockLeft = () => {
+            let left = myBlock.offsetLeft;
+            left = left - 50;
+            myBlock.style.left = left + 'px';
+        }
+
+        const offsetMyBlockRight = () => {
+            let right = myBlock.offsetLeft;
+            right = right + 50;
+            myBlock.style.left = right + 'px';
+        }
+
+        const offsetMyBlockUp = () => {
+            let up = myBlock.offsetTop;
+            up = up - 50;
+            myBlock.style.top = up + 'px';
+        }
+
+        const offsetMyBlockDown = () => {
+            let down = myBlock.offsetTop;
+            down = down + 50;
+            myBlock.style.top = down + 'px';
+        }
+
+
+
+        // 3. ACTION LIST 
+        const createsActionList = (keyPressEvent) => {
+            keyLeft(keyPressEvent);
+            keyRight(keyPressEvent);
+            keyUp(keyPressEvent);
+            keyDown(keyPressEvent);
+            keyR(keyPressEvent);
+        }
+
+        const createsActionListBlock = (keyPressEvent) => {
+            actionListBlock = document.createElement('div');
+            actionListBlock.textContent = actionListBlockDirection(keyPressEvent);
+            document.body.appendChild(actionListBlock);
+
+            actionListBlock.addEventListener('click', clickRemoveActionListBlock);
+            actionListBlock.addEventListener('mouseover', actionBlockMouseOver);
+            actionListBlock.addEventListener('mouseout', actionBlockMouseOut);
+
+            actionListBlockArr.push(actionListBlock);
+            actionListBlockStyle();
+        }
+
+        const removeActionListBlock = () => {
+            if (actionListBlockArr.length !== 0) {
+                const listShift = actionListBlockArr.shift();
+                listShift.remove();
+                actionListArr.shift();
+            }
+        }
+
+        const clickRemoveActionListBlock = (e) => {
+            const index = actionListBlockArr.indexOf(e.target);
+            actionListArr.splice(index, 1);
+            actionListBlockArr.splice(index, 1);
+            e.target.remove();
+        }
+
+        const actionListBlockDirection = (keyPressEvent) => {
+            if (keyPressEvent.code === 'ArrowLeft') {
+                return `Left`;
+            }
+            else if (keyPressEvent.code === 'ArrowRight') {
+                return `Right`;
+            }
+            else if (keyPressEvent.code === 'ArrowUp') {
+                return `Up`;
+            }
+            return `Down`;
+        }
+
+        const keyLeft = (keyPressEvent) => {
+            if (keyPressEvent.code === 'ArrowLeft') {
+                actionListArr.push(keyPressEvent.code);
+                createsActionListBlock(keyPressEvent);
+            }
+        }
+
+        const keyRight = (keyPressEvent) => {
+            if (keyPressEvent.code === 'ArrowRight') {
+                actionListArr.push(keyPressEvent.code);
+                createsActionListBlock(keyPressEvent);
+            }
+        }
+
+        const keyUp = (keyPressEvent) => {
+            if (keyPressEvent.code === 'ArrowUp') {
+                actionListArr.push(keyPressEvent.code);
+                createsActionListBlock(keyPressEvent);
+            }
+        }
+
+        const keyDown = (keyPressEvent) => {
+            if (keyPressEvent.code === 'ArrowDown') {
+                actionListArr.push(keyPressEvent.code);
+                createsActionListBlock(keyPressEvent);
+            }
+        }
+
+        const keyR = (keyPressEvent) => {
+            if (keyPressEvent.code === 'KeyR') {
+                myBlockPositionReset();
+            }
+        }
+
+        window.addEventListener('keydown', createsActionList);
+        window.addEventListener('keydown', releaseMyBlock);
+        document.addEventListener("DOMContentLoaded", createsMyBlock);
+
+    </script>
+</body>
+
+</html>

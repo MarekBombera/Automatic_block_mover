@@ -5,5 +5,5 @@
 - Press R to reset the block position
 - Click on the specific sequence block to remove it
 
-I made this purely with JavaScript in HTML file without any HTML.
+I made this purely with JavaScript in HTML file without any HTML.  
 Definitely unnecessary, but I've never done it, so I took on the challenge.
